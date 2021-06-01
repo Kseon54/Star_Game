@@ -27,11 +27,15 @@ public class MenuScreen extends BaseScreen {
 
         logoImg = new Texture("badlogic.jpg");
         logo = new Logo(logoImg);
+        logo.setSpeed(0.009f);
     }
+
+
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        logo.update(delta);
         batch.begin();
         background.draw(batch);
         logo.draw(batch);

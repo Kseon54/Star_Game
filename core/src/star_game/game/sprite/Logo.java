@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import star_game.game.actions.IMovement;
 import star_game.game.base.Sprite;
 import star_game.game.math.Rect;
 
-public class Logo extends Sprite implements IMovement {
+public class Logo extends Sprite{
+
+    Vector2 nextPos = new Vector2();
+    Vector2 tmp = new Vector2();
+    Vector2 v = new Vector2();
 
     private float speed;
 
@@ -28,7 +31,16 @@ public class Logo extends Sprite implements IMovement {
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
-        move();
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        tmp.set(nextPos);
+        if (tmp.sub(pos).len() <= v.len()) {
+            pos.set(nextPos);
+            v.setZero();
+        } else pos.add(v);
     }
 
     @Override
@@ -44,18 +56,8 @@ public class Logo extends Sprite implements IMovement {
         this.speed = speed;
     }
 
-    @Override
     public void setNextPos(Vector2 nextPos) {
         this.nextPos.set(nextPos);
-        this.v.set(nextPos.cpy().sub(pos).nor().scl(speed));
-    }
-
-    @Override
-    public void move() {
-        tmp.set(nextPos);
-        if (tmp.sub(pos).len() <= v.len()) {
-            pos.set(nextPos);
-            v.setZero();
-        } else pos.add(v);
+        this.v.set(nextPos.cpy().sub(pos).setLength(speed));
     }
 }
