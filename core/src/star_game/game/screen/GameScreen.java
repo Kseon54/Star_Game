@@ -5,11 +5,13 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import star_game.game.base.BaseScreen;
 import star_game.game.math.Rect;
 import star_game.game.sprite.Background;
+import star_game.game.sprite.PlayerShip;
 import star_game.game.sprite.Star;
 
 public class GameScreen extends BaseScreen {
@@ -19,10 +21,11 @@ public class GameScreen extends BaseScreen {
     private Game game;
 
     private Texture bg;
-    private TextureAtlas menuAtlas;
+    private TextureAtlas mainAtlas;
 
     private Background background;
     Star[] stars;
+    PlayerShip playerShip;
 
     @Override
     public void show() {
@@ -32,11 +35,13 @@ public class GameScreen extends BaseScreen {
 
         bg = new Texture("backgrounds/background.jpg");
         background = new Background(bg);
-        menuAtlas = new TextureAtlas("textures/menuAtlas.tpack");
+        mainAtlas = new TextureAtlas("textures/mainAtlas.tpack");
         stars = new Star[COUNT_STAR];
         for (int i = 0; i < stars.length; i++) {
-            stars[i] = new Star(menuAtlas);
+            stars[i] = new Star(mainAtlas);
         }
+
+        playerShip = new PlayerShip(mainAtlas);
     }
 
     @Override
@@ -49,6 +54,7 @@ public class GameScreen extends BaseScreen {
         for (Star star: stars) {
             star.update(delta);
         }
+        playerShip.update(delta);
     }
 
     public void draw() {
@@ -58,6 +64,7 @@ public class GameScreen extends BaseScreen {
         for (Star star: stars) {
             star.draw(batch);
         }
+        playerShip.draw(batch);
         batch.end();
     }
 
@@ -68,10 +75,28 @@ public class GameScreen extends BaseScreen {
         for (Star star: stars) {
             star.resize(worldBounds);
         }
+        playerShip.resize(worldBounds);
     }
 
     @Override
     public void dispose() {
         super.dispose();
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
+        playerShip.touchUp(touch,pointer,button);
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(Vector2 touch, int pointer) {
+        playerShip.touchDragged(touch,pointer);
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        return false;
     }
 }
