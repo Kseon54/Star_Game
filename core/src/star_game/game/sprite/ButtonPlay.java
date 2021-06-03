@@ -29,7 +29,7 @@ public class ButtonPlay extends ScaledButton {
 
     @Override
     protected void action() {
-        game.setScreen(new GameScreen());
+        game.setScreen(new GameScreen(game));
     }
 
 }

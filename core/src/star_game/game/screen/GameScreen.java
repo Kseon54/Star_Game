@@ -27,9 +27,12 @@ public class GameScreen extends BaseScreen {
     Star[] stars;
     PlayerShip playerShip;
 
+    public GameScreen(Game game) {
+        this.game = game;
+    }
+
     @Override
     public void show() {
-        super.show();
         super.show();
         Gdx.input.setInputProcessor(this);
 
@@ -51,7 +54,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void update(float delta) {
-        for (Star star: stars) {
+        for (Star star : stars) {
             star.update(delta);
         }
         playerShip.update(delta);
@@ -61,7 +64,7 @@ public class GameScreen extends BaseScreen {
         ScreenUtils.clear(0.33f, 0.47f, 0.68f, 1);
         batch.begin();
         background.draw(batch);
-        for (Star star: stars) {
+        for (Star star : stars) {
             star.draw(batch);
         }
         playerShip.draw(batch);
@@ -72,7 +75,7 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        for (Star star: stars) {
+        for (Star star : stars) {
             star.resize(worldBounds);
         }
         playerShip.resize(worldBounds);
@@ -81,17 +84,19 @@ public class GameScreen extends BaseScreen {
     @Override
     public void dispose() {
         super.dispose();
+        bg.dispose();
+        mainAtlas.dispose();
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        playerShip.touchUp(touch,pointer,button);
+        playerShip.touchUp(touch, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
-        playerShip.touchDragged(touch,pointer);
+        playerShip.touchDragged(touch, pointer);
         return false;
     }
 
