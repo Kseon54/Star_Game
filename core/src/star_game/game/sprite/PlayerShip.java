@@ -10,7 +10,7 @@ import star_game.game.math.Rect;
 
 public class PlayerShip extends Sprite {
 
-    public static final float SPEED = 0.013f;
+    public static final float SPEED = 0.02f;
 
     private final Vector2 v;
     private final Vector2 tmp;
@@ -44,6 +44,8 @@ public class PlayerShip extends Sprite {
             pos.set(nextPos.x,pos.y);
             v.setZero();
         } else pos.add(v);
+        if (getLeft()<worldBounds.getLeft())setLeft(worldBounds.getLeft());
+        if (getRight()>worldBounds.getRight())setRight(worldBounds.getRight());
     }
 
     @Override
