@@ -56,8 +56,8 @@ public class Star extends Sprite {
     }
 
     private void speedChange(){
-        float vx = Rnd.nextFloat(-0.005f,0.005f);
-        float vy = Rnd.nextFloat(-0.1f,-0.05f);
+        float vx = Rnd.nextFloat(-0.006f,0.006f);
+        float vy = Rnd.nextFloat(-0.12f,-0.001f);
         v.set(vx,vy);
     }
     private void posChange(){
