@@ -6,23 +6,30 @@ import com.badlogic.gdx.math.Vector2;
 
 import star_game.game.base.Sprite;
 import star_game.game.math.Rect;
+import star_game.game.pool.BulletPool;
 
 
 public class PlayerShip extends Sprite {
 
     public static final float SPEED = 0.02f;
+    public static final float PADDING = 0.02f;
 
     private final Vector2 v;
     private final Vector2 tmp;
     private final Vector2 nextPos;
 
     Rect worldBounds;
+    private BulletPool bulletPool;
+    private TextureRegion bulletRegion;
+    private Vector2 bulletV;
+    private Vector2 bulletPos;
 
-    private final TextureRegion[] ship;
-
-    public PlayerShip(TextureAtlas atlas) {
-        super(new TextureRegion(atlas.findRegion("main_ship")).split(195, 287)[0][0]);
-        ship = new TextureRegion(atlas.findRegion("main_ship")).split(195, 287)[0];
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
+        super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.bulletPool = bulletPool;
+        this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletV = new Vector2(0, 0.5f);
+        this.bulletPos = new Vector2();
         v = new Vector2();
         tmp = new Vector2();
         nextPos = new Vector2();
@@ -33,19 +40,21 @@ public class PlayerShip extends Sprite {
         super.resize(worldBounds);
         this.worldBounds = worldBounds;
         setHeightProportion(0.2f);
-        setBottom(worldBounds.getBottom());
+        setBottom(worldBounds.getBottom() + PADDING);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        tmp.set(nextPos.x,0);
-        if (tmp.sub(pos.x,0).len() <= v.len()) {
-            pos.set(nextPos.x,pos.y);
+        tmp.set(nextPos.x, 0);
+        if (tmp.sub(pos.x, 0).len() <= v.len()) {
+            pos.set(nextPos.x, pos.y);
             v.setZero();
         } else pos.add(v);
-        if (getLeft()<worldBounds.getLeft())setLeft(worldBounds.getLeft());
-        if (getRight()>worldBounds.getRight())setRight(worldBounds.getRight());
+        if (getLeft() < worldBounds.getLeft()) setLeft(worldBounds.getLeft());
+        if (getRight() > worldBounds.getRight()) setRight(worldBounds.getRight());
+
+        shoot();
     }
 
     @Override
@@ -59,5 +68,11 @@ public class PlayerShip extends Sprite {
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         v.setZero();
         return false;
+    }
+
+    private void shoot() {
+        Bullet bullet = bulletPool.obtain();
+        bulletPos.set(pos.x, pos.y + getHalfHeight());
+        bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, 1, 0.01f);
     }
 }
