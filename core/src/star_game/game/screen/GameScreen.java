@@ -3,6 +3,7 @@ package star_game.game.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -29,6 +30,8 @@ public class GameScreen extends BaseScreen {
     PlayerShip playerShip;
     BulletPool bulletPool;
 
+    Sound sound;
+
     public GameScreen(Game game) {
         this.game = game;
     }
@@ -46,7 +49,8 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(mainAtlas);
         }
         bulletPool = new BulletPool();
-        playerShip = new PlayerShip(mainAtlas,bulletPool);
+        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        playerShip = new PlayerShip(mainAtlas, bulletPool, sound);
     }
 
     @Override
@@ -92,6 +96,7 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         mainAtlas.dispose();
         bulletPool.dispose();
+        playerShip.destroy();
     }
 
     private void freeAllDestroyed() {

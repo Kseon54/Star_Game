@@ -1,5 +1,7 @@
 package star_game.game.sprite;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import star_game.game.base.Sprite;
 import star_game.game.math.Rect;
 import star_game.game.pool.BulletPool;
+import star_game.game.utils.Timer;
 
 
 public class PlayerShip extends Sprite {
@@ -24,7 +27,11 @@ public class PlayerShip extends Sprite {
     private Vector2 bulletV;
     private Vector2 bulletPos;
 
-    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
+    private Timer timer;
+
+    Sound sound;
+
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, Sound sound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
@@ -33,6 +40,9 @@ public class PlayerShip extends Sprite {
         v = new Vector2();
         tmp = new Vector2();
         nextPos = new Vector2();
+
+        timer = new Timer(4);
+        this.sound = sound;
     }
 
     @Override
@@ -54,7 +64,10 @@ public class PlayerShip extends Sprite {
         if (getLeft() < worldBounds.getLeft()) setLeft(worldBounds.getLeft());
         if (getRight() > worldBounds.getRight()) setRight(worldBounds.getRight());
 
-        shoot();
+        if (timer.isItTime()) {
+            shoot();
+            sound.play(0.03f);
+        }
     }
 
     @Override

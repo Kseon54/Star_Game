@@ -3,6 +3,7 @@ package star_game.game.base;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
@@ -25,6 +26,8 @@ public class BaseScreen implements Screen, InputProcessor {
 
     private Vector2 touch;
 
+    Music music;
+
     @Override
     public void show() {
         System.out.println("show");
@@ -36,6 +39,10 @@ public class BaseScreen implements Screen, InputProcessor {
         screenToWorld = new Matrix3();
         touch = new Vector2();
         Gdx.input.setInputProcessor(this);
+
+        music  = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
