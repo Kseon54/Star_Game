@@ -147,8 +147,6 @@ public class BaseScreen implements Screen, InputProcessor {
         return false;
     }
 
-
-
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
@@ -158,5 +156,9 @@ public class BaseScreen implements Screen, InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         System.out.println("scrolled amountX = " + amountX + " amountY = " + amountY);
         return false;
+    }
+
+    public Rect getWorldBounds() {
+        return worldBounds;
     }
 }
