@@ -9,11 +9,17 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import star_game.game.base.BaseScreen;
 import star_game.game.math.Rect;
 import star_game.game.pool.BulletPool;
 import star_game.game.pool.EnemyShipPool;
 import star_game.game.sprite.Background;
+import star_game.game.sprite.Bullet;
+import star_game.game.sprite.EnemyShip;
 import star_game.game.sprite.PlayerShip;
 import star_game.game.sprite.Star;
 import star_game.game.utils.EnemyEmitter;
@@ -76,6 +82,8 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyShipPool.updateActiveSprites(delta);
         enemyEmitter.generate(delta);
+
+        activeIsConflict();
     }
 
     public void draw() {
@@ -115,6 +123,31 @@ public class GameScreen extends BaseScreen {
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyed();
         enemyShipPool.freeAllDestroyed();
+    }
+
+    private void activeIsConflict() {
+        List<EnemyShip> listEnemy = new ArrayList<>(enemyShipPool.getActiveObjects());
+        List<Bullet> bulletPlayer = new ArrayList<>(bulletPool.getActiveObjects());
+
+        for (int i = 0; i < bulletPlayer.size(); i++) {
+            if (!bulletPlayer.get(i).getOwner().equals(playerShip)) {
+                bulletPlayer.remove(i);
+                i--;
+            }
+        }
+
+        for (int i = 0; i < listEnemy.size(); i++) {
+            if (listEnemy.get(i).isConflict(playerShip)) {
+                listEnemy.get(i).destroy();
+                continue;
+            }
+            for (int j = 0; j < bulletPlayer.size(); j++) {
+                if (listEnemy.get(i).isConflict(bulletPlayer.get(j))) {
+                    listEnemy.get(i).destroy();
+                    bulletPlayer.get(j).destroy();
+                }
+            }
+        }
     }
 
     @Override

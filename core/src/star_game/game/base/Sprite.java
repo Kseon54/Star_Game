@@ -63,6 +63,14 @@ public class Sprite extends Rect {
 
     }
 
+
+    public boolean isConflict(Sprite sprite){
+        return !(this.getTop() < sprite.getBottom() ||
+                this.getBottom() > sprite.getTop() ||
+                this.getRight() < sprite.getLeft() ||
+                this.getLeft() > sprite.getRight() );
+    }
+
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         return false;
     }
