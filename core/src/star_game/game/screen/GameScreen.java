@@ -18,6 +18,7 @@ import star_game.game.pool.EnemyShipPool;
 import star_game.game.pool.ExplosionPool;
 import star_game.game.sprite.Background;
 import star_game.game.sprite.Bullet;
+import star_game.game.sprite.ButtonNewGame;
 import star_game.game.sprite.EnemyShip;
 import star_game.game.sprite.GameOver;
 import star_game.game.sprite.PlayerShip;
@@ -28,7 +29,7 @@ public class GameScreen extends BaseScreen {
 
     private static final int COUNT_STAR = 24;
 
-    private Game game;
+    private final Game game;
 
     private enum State {GAME_OVER, PLAYING}
 
@@ -42,6 +43,8 @@ public class GameScreen extends BaseScreen {
     private EnemyShipPool enemyShipPool;
     private ExplosionPool explosionPool;
     private GameOver gameOver;
+
+    private ButtonNewGame newGame;
 
     private EnemyEmitter enemyEmitter;
 
@@ -83,7 +86,7 @@ public class GameScreen extends BaseScreen {
 
         state = State.PLAYING;
         gameOver = new GameOver(mainAtlas);
-
+        newGame = new ButtonNewGame(mainAtlas, game);
     }
 
     @Override
@@ -104,7 +107,7 @@ public class GameScreen extends BaseScreen {
             enemyShipPool.updateActiveSprites(delta);
             enemyEmitter.generate(delta);
         } else {
-
+            newGame.update(delta);
         }
         explosionPool.updateActiveSprites(delta);
     }
@@ -123,6 +126,7 @@ public class GameScreen extends BaseScreen {
             explosionPool.drawActiveSprites(batch);
         } else {
             gameOver.draw(batch);
+            newGame.draw(batch);
         }
         batch.end();
     }
@@ -136,6 +140,7 @@ public class GameScreen extends BaseScreen {
         }
         playerShip.resize(worldBounds);
         gameOver.resize(worldBounds);
+        newGame.resize(worldBounds);
     }
 
     @Override
@@ -143,10 +148,15 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         mainAtlas.dispose();
-        bulletPool.dispose();
+
         playerShip.destroy();
+
+        bulletPool.dispose();
         enemyShipPool.dispose();
+
         bulletSound.dispose();
+        laserSound.dispose();
+        explosionSound.dispose();
     }
 
     private void freeAllDestroyed() {
@@ -183,6 +193,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         playerShip.touchUp(touch, pointer, button);
+        newGame.touchUp(touch, pointer, button);
         return false;
     }
 
@@ -194,6 +205,7 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
+        newGame.touchDown(touch, pointer, button);
         return false;
     }
 }

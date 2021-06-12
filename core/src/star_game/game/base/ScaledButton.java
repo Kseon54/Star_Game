@@ -3,12 +3,9 @@ package star_game.game.base;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class ScaledButton extends Sprite {
+public abstract class ScaledButton extends Button {
 
     private static final float SCALE = 0.9f;
-
-    private boolean press;
-    private int pointer;
 
     public ScaledButton(TextureRegion region) {
         super(region);
@@ -16,10 +13,8 @@ public abstract class ScaledButton extends Sprite {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        if (press || !isMe(touch)) {
-            return false;
-        }
-        this.pointer = pointer;
+        if (press || !isMe(touch)) return false;
+        super.touchDown(touch,pointer,button);
         this.scale = SCALE;
         press = true;
         return false;
@@ -28,13 +23,8 @@ public abstract class ScaledButton extends Sprite {
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         if (this.pointer != pointer || !press) return false;
-        if (isMe(touch)) {
-            action();
-        }
-        this.press = false;
+        super.touchUp(touch,pointer,button);
         this.scale = 1f;
         return false;
     }
-
-    protected abstract void action();
 }
