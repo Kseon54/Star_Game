@@ -9,9 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import star_game.game.base.BaseScreen;
 import star_game.game.math.Rect;
@@ -70,6 +68,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         update(delta);
+        activeIsConflict();
         draw();
         freeAllDestroyed();
     }
@@ -82,8 +81,6 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyShipPool.updateActiveSprites(delta);
         enemyEmitter.generate(delta);
-
-        activeIsConflict();
     }
 
     public void draw() {
@@ -126,25 +123,24 @@ public class GameScreen extends BaseScreen {
     }
 
     private void activeIsConflict() {
-        List<EnemyShip> listEnemy = new ArrayList<>(enemyShipPool.getActiveObjects());
-        List<Bullet> bulletPlayer = new ArrayList<>(bulletPool.getActiveObjects());
-
-        for (int i = 0; i < bulletPlayer.size(); i++) {
-            if (!bulletPlayer.get(i).getOwner().equals(playerShip)) {
-                bulletPlayer.remove(i);
-                i--;
-            }
-        }
+        List<EnemyShip> listEnemy = enemyShipPool.getActiveObjects();
+        List<Bullet> bullets = bulletPool.getActiveObjects();
 
         for (int i = 0; i < listEnemy.size(); i++) {
-            if (listEnemy.get(i).isConflict(playerShip)) {
+            if (!listEnemy.get(i).isOutside(playerShip)) {
+                playerShip.damage(listEnemy.get(i).getHp()/2);
                 listEnemy.get(i).destroy();
                 continue;
             }
-            for (int j = 0; j < bulletPlayer.size(); j++) {
-                if (listEnemy.get(i).isConflict(bulletPlayer.get(j))) {
-                    listEnemy.get(i).destroy();
-                    bulletPlayer.get(j).destroy();
+            for (int j = 0; j < bullets.size(); j++) {
+                if (!listEnemy.get(i).isOutside(bullets.get(j)) &&
+                        bullets.get(j).getOwner().equals(playerShip)) {
+                    listEnemy.get(i).damage(playerShip.getDamage());
+                    bullets.get(j).destroy();
+                }
+                if (!playerShip.isOutside(bullets.get(j))){
+                    playerShip.damage(bullets.get(j).getDamage());
+                    bullets.get(j).destroy();
                 }
             }
         }

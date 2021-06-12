@@ -10,6 +10,7 @@ import star_game.game.sprite.Bullet;
 
 public class Ship extends Sprite {
 
+    public static final float DAMAGE_ANIMATE_TIMER = 0.1f;
     protected Vector2 v0;
     protected Vector2 v;
 
@@ -26,6 +27,8 @@ public class Ship extends Sprite {
     protected float reloadInterval;
     protected float reloadTimer;
 
+    protected float damageAnimateTimer = DAMAGE_ANIMATE_TIMER;
+
     public Ship() {
     }
 
@@ -41,11 +44,32 @@ public class Ship extends Sprite {
             reloadTimer = 0;
             shoot();
         }
+
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_TIMER) frame = 0;
+    }
+
+    public void damage(int damage) {
+        hp -= damage;
+        if (hp <= 0) {
+            hp = 0;
+            destroy();
+        }
+        frame = 1;
+        damageAnimateTimer = 0;
     }
 
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, damage, bulletHeight);
         bulletSound.play();
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getHp() {
+        return hp;
     }
 }
