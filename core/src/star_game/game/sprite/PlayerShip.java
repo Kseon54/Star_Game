@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import star_game.game.base.Ship;
 import star_game.game.math.Rect;
 import star_game.game.pool.BulletPool;
+import star_game.game.pool.ExplosionPool;
 
 
 public class PlayerShip extends Ship {
@@ -19,13 +20,16 @@ public class PlayerShip extends Ship {
     private final Vector2 tmp;
     private final Vector2 nextPos;
 
-    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
+    public PlayerShip(TextureAtlas atlas, ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletSound = bulletSound;
         this.bulletV = new Vector2(0, 0.5f);
         this.bulletPos = new Vector2();
+
+        this.explosionPool = explosionPool;
+
         v0 = new Vector2(0.5f, 0);
         v = new Vector2(SPEED,0);
         reloadInterval = RELOAD_INTERVAL;

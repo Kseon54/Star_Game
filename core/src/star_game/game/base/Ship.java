@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import star_game.game.math.Rect;
 import star_game.game.pool.BulletPool;
+import star_game.game.pool.ExplosionPool;
 import star_game.game.sprite.Bullet;
+import star_game.game.sprite.Explosion;
 
 public class Ship extends Sprite {
 
@@ -23,6 +25,8 @@ public class Ship extends Sprite {
     protected float bulletHeight;
     protected int damage;
     protected int hp;
+
+    protected ExplosionPool explosionPool;
 
     protected float reloadInterval;
     protected float reloadTimer;
@@ -63,6 +67,17 @@ public class Ship extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, damage, bulletHeight);
         bulletSound.play();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        boom();
+    }
+
+    private void boom(){
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(pos,getHeight());
     }
 
     public int getDamage() {
