@@ -74,4 +74,9 @@ public class PlayerShip extends Ship {
         v.setZero();
         return false;
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }

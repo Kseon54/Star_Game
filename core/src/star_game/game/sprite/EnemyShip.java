@@ -11,6 +11,8 @@ import star_game.game.pool.ExplosionPool;
 
 public class EnemyShip extends Ship {
 
+    private static final float PADDING = 0.03f;
+
     public EnemyShip(Rect worldBounds, ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound) {
         this.worldBounds = worldBounds;
         this.bulletPool = bulletPool;
@@ -26,11 +28,18 @@ public class EnemyShip extends Ship {
     public void update(float delta) {
         super.update(delta);
         bulletPos.set(pos.x, pos.y - getHalfHeight());
-        if (getTop() < worldBounds.getTop()) {
+
+        if (getTop() + PADDING < worldBounds.getTop()) {
             v.set(v0);
         } else {
             reloadTimer = reloadInterval * 0.8f;
         }
+
+        if (getRight() > worldBounds.getRight() || getLeft() < worldBounds.getLeft()) {
+            v0.x *= -1;
+            v.x *= -1;
+        }
+
         if (worldBounds.isOutside(this)) {
             destroy();
         }
@@ -56,6 +65,6 @@ public class EnemyShip extends Ship {
         this.reloadInterval = reloadInterval;
         setHeightProportion(height);
         this.hp = hp;
-        v.set(0, -0.3f);
+        v.set(0, -0.4f);
     }
 }

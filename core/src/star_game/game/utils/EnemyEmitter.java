@@ -46,7 +46,7 @@ public class EnemyEmitter {
 
     private final TextureRegion bulletRegion;
 
-    private final Rect  worldBounds;
+    private final Rect worldBounds;
     private final EnemyShipPool enemyPool;
 
     public EnemyEmitter(Rect worldBounds, EnemyShipPool enemyPool, TextureAtlas atlas) {
@@ -58,7 +58,7 @@ public class EnemyEmitter {
         enemyBigRegions = Regions.split(atlas.findRegion("enemy2"), 1, 2, 2);
         enemySmallV = new Vector2(0, -0.2f);
         enemyMediumV = new Vector2(0, -0.03f);
-        enemyBigV = new Vector2(0, -0.005f);
+        enemyBigV = new Vector2();
     }
 
     public void generate(float delta) {
@@ -79,7 +79,7 @@ public class EnemyEmitter {
                         ENEMY_SMALL_HEIGHT,
                         ENEMY_SMALL_HP
                 );
-            } else if (type < 0.8f) {
+            } else if (type < 0.7f) {
                 enemyShip.set(
                         enemyMediumRegions,
                         enemyMediumV,
@@ -92,6 +92,7 @@ public class EnemyEmitter {
                         ENEMY_MEDIUM_HP
                 );
             } else {
+                enemyBigV.set(Rnd.genSign() * Rnd.nextFloat(0.025f, 0.055f), 0);
                 enemyShip.set(
                         enemyBigRegions,
                         enemyBigV,
