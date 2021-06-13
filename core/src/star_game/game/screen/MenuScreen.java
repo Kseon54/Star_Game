@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import star_game.game.base.BaseScreen;
 import star_game.game.math.Rect;
 import star_game.game.sprite.Background;
-import star_game.game.sprite.ButtonExit;
-import star_game.game.sprite.ButtonPlay;
+import star_game.game.sprite.Button.ButtonExit;
+import star_game.game.sprite.Button.ButtonPlay;
 import star_game.game.sprite.Star;
 
 public class MenuScreen extends BaseScreen {

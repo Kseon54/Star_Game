@@ -1,4 +1,4 @@
-package star_game.game.sprite;
+package star_game.game.sprite.Button;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -28,7 +28,7 @@ public class ButtonPlay extends ScaledButton {
     }
 
     @Override
-    protected void action() {
+    protected void actionOnClick() {
         game.setScreen(new GameScreen(game));
     }
 

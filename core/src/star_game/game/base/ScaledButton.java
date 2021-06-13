@@ -12,19 +12,12 @@ public abstract class ScaledButton extends Button {
     }
 
     @Override
-    public boolean touchDown(Vector2 touch, int pointer, int button) {
-        if (press || !isMe(touch)) return false;
-        super.touchDown(touch,pointer,button);
+    public void touchDownAction(Vector2 touch, int pointer, int button) {
         this.scale = SCALE;
-        press = true;
-        return false;
     }
 
     @Override
-    public boolean touchUp(Vector2 touch, int pointer, int button) {
-        if (this.pointer != pointer || !press) return false;
-        super.touchUp(touch,pointer,button);
+    public void touchUpAction(Vector2 touch, int pointer, int button) {
         this.scale = 1f;
-        return false;
     }
 }

@@ -1,4 +1,4 @@
-package star_game.game.sprite;
+package star_game.game.sprite.Button;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -24,7 +24,7 @@ public class ButtonExit extends ScaledButton {
     }
 
     @Override
-    protected void action() {
+    protected void actionOnClick() {
         Gdx.app.exit();
     }
 }

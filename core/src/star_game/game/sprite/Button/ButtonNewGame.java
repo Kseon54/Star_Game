@@ -1,7 +1,8 @@
-package star_game.game.sprite;
+package star_game.game.sprite.Button;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 
 import star_game.game.base.Button;
 import star_game.game.math.Rect;
@@ -48,7 +49,7 @@ public class ButtonNewGame extends Button {
     }
 
     @Override
-    protected void action() {
+    protected void actionOnClick() {
         game.setScreen(new GameScreen(game));
     }
 }

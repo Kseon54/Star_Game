@@ -13,22 +13,32 @@ public abstract class Button extends Sprite {
     }
 
     @Override
-    public boolean touchDown(Vector2 touch, int pointer, int button) {
+    public final boolean touchDown(Vector2 touch, int pointer, int button) {
         if (this.press || !isMe(touch)) return false;
         this.pointer = pointer;
         this.press = true;
+        touchDownAction(touch,pointer,button);
         return false;
+    }
+
+    protected void touchDownAction(Vector2 touch, int pointer, int button){
+
     }
 
     @Override
-    public boolean touchUp(Vector2 touch, int pointer, int button) {
+    public final boolean touchUp(Vector2 touch, int pointer, int button) {
         if (this.pointer != pointer || !this.press) return false;
         if (isMe(touch)) {
-            action();
+            actionOnClick();
         }
         this.press = false;
+        touchUpAction(touch,pointer,button);
         return false;
     }
 
-    protected abstract void action();
+    protected void touchUpAction (Vector2 touch, int pointer, int button){
+
+    }
+
+    protected abstract void actionOnClick();
 }

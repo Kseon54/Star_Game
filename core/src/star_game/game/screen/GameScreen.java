@@ -18,7 +18,7 @@ import star_game.game.pool.EnemyShipPool;
 import star_game.game.pool.ExplosionPool;
 import star_game.game.sprite.Background;
 import star_game.game.sprite.Bullet;
-import star_game.game.sprite.ButtonNewGame;
+import star_game.game.sprite.Button.ButtonNewGame;
 import star_game.game.sprite.EnemyShip;
 import star_game.game.sprite.GameOver;
 import star_game.game.sprite.PlayerShip;
