@@ -50,7 +50,7 @@ public class EnemyShip extends Ship {
             Vector2 v0,
             TextureRegion bulletRegion,
             float bulletHeight,
-            float bulletVY,
+            Vector2 bulletV,
             int damage,
             float reloadInterval,
             float height,
@@ -60,11 +60,11 @@ public class EnemyShip extends Ship {
         this.v0.set(v0);
         this.bulletRegion = bulletRegion;
         this.bulletHeight = bulletHeight;
-        this.bulletV.set(0, bulletVY);
+        this.bulletV.set(bulletV);
         this.damage = damage;
         this.reloadInterval = reloadInterval;
-        setHeightProportion(height);
         this.hp = hp;
         v.set(0, -0.4f);
+        setHeightProportion(height);
     }
 }

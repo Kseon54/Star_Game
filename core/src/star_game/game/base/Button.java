@@ -41,4 +41,12 @@ public abstract class Button extends Sprite {
     }
 
     protected abstract void actionOnClick();
+
+    public boolean isPress() {
+        return press;
+    }
+
+    public int getPointer() {
+        return pointer;
+    }
 }

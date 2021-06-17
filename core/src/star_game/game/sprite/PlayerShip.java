@@ -16,6 +16,7 @@ public class PlayerShip extends Ship {
     private static final float HEIGHT = 0.15f;
     private static final float PADDING = 0.03f;
     private static final float RELOAD_INTERVAL = 0.2f;
+    private static final int HP = 100;
 
     private final Vector2 tmp;
     private final Vector2 nextPos;
@@ -25,20 +26,26 @@ public class PlayerShip extends Ship {
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletSound = bulletSound;
-        this.bulletV = new Vector2(0, 0.5f);
-        this.bulletPos = new Vector2();
+        this.bulletV.set(0, 0.5f);
 
         this.explosionPool = explosionPool;
 
-        v0 = new Vector2(0.5f, 0);
-        v = new Vector2(SPEED,0);
+        v0.set(0.5f, 0);
+        v.set(SPEED, 0);
         reloadInterval = RELOAD_INTERVAL;
         bulletHeight = 0.01f;
         damage = 1;
-        hp = 100;
+        hp = HP;
 
         tmp = new Vector2();
         nextPos = new Vector2();
+    }
+
+    public void newGame() {
+        this.hp = HP;
+        this.pos.x = worldBounds.pos.x;
+        v.setZero();
+        flushDestroy();
     }
 
     @Override
@@ -65,7 +72,8 @@ public class PlayerShip extends Ship {
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
         nextPos.set(touch.x, 0);
-        this.v.set(nextPos.cpy().sub(pos).setLength(SPEED).x, 0);
+        tmp.set(nextPos);
+        this.v.set(tmp.sub(pos).setLength(SPEED).x, 0);
         return false;
     }
 
@@ -76,7 +84,7 @@ public class PlayerShip extends Ship {
     }
 
     @Override
-    public void destroy() {
-
+    public Vector2 getV() {
+        return v;
     }
 }

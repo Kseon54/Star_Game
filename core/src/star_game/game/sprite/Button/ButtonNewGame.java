@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import star_game.game.base.BaseScreen;
 import star_game.game.base.Button;
 import star_game.game.math.Rect;
 import star_game.game.screen.GameScreen;
@@ -18,11 +19,11 @@ public class ButtonNewGame extends Button {
     private boolean isMaxHeight;
     private float updateHeight;
 
-    Game game;
+    GameScreen gameScreen;
 
-    public ButtonNewGame(TextureAtlas atlas, Game game) {
+    public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("button_new_game"));
-        this.game = game;
+        this.gameScreen = gameScreen;
         height = HEIGHT;
         updateHeight = UPDATE_HEIGHT;
     }
@@ -44,12 +45,12 @@ public class ButtonNewGame extends Button {
             isMaxHeight = false;
             updateHeight *= -1;
         }
-        height += updateHeight;
+        if (!isPress()) height += updateHeight;
         setHeightProportion(height);
     }
 
     @Override
     protected void actionOnClick() {
-        game.setScreen(new GameScreen(game));
+        gameScreen.newGame();
     }
 }

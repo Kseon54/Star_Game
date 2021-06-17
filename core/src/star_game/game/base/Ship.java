@@ -38,6 +38,10 @@ public class Ship extends Sprite {
 
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
+        v = new Vector2();
+        v0 = new Vector2();
+        bulletV = new Vector2();
+        bulletPos = new Vector2();
     }
 
     @Override
@@ -75,9 +79,9 @@ public class Ship extends Sprite {
         boom();
     }
 
-    private void boom(){
+    private void boom() {
         Explosion explosion = explosionPool.obtain();
-        explosion.set(pos,getHeight());
+        explosion.set(pos, getHeight());
     }
 
     public int getDamage() {
@@ -86,5 +90,13 @@ public class Ship extends Sprite {
 
     public int getHp() {
         return hp;
+    }
+
+    public void setBulletPos(Vector2 bulletPos) {
+        this.bulletPos.set(bulletPos);
+    }
+
+    public Vector2 getV() {
+        return v;
     }
 }
