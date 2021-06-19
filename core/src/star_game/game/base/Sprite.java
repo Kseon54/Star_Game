@@ -30,7 +30,6 @@ public class Sprite extends Rect {
 
     /**
      * Установка размера изображения по высоте
-     *
      * @param height высота
      */
     public void setHeightProportion(float height) {
@@ -41,7 +40,6 @@ public class Sprite extends Rect {
 
     /**
      * Логика спрайта
-     *
      * @param delta отрезок времени
      */
     public void update(float delta) {
@@ -61,14 +59,6 @@ public class Sprite extends Rect {
 
     public void resize(Rect worldBounds) {
 
-    }
-
-    @Override
-    public boolean isOutside(Rect sprite) {
-        return (this.pos.y < sprite.getBottom() ||
-                this.pos.y > sprite.getTop() ||
-                this.getRight() < sprite.getLeft() ||
-                this.getLeft() > sprite.getRight());
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
