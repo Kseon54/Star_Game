@@ -78,7 +78,7 @@ public class GameScreen extends BaseScreen {
     public void show() {
         super.show();
 
-        bg = new Texture("backgrounds/background.jpg");
+        bg = new Texture("backgrounds/bg.png");
         background = new Background(bg);
 
         mainAtlas = new TextureAtlas("textures/mainAtlas.tpack");
@@ -130,7 +130,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void update(float delta) {
-        if (state == State.PLAYING) {
+        if (state.equals(State.PLAYING)) {
             playerShip.update(delta);
             bulletPool.updateActiveSprites(delta);
             enemyShipPool.updateActiveSprites(delta);
@@ -138,6 +138,7 @@ public class GameScreen extends BaseScreen {
         } else {
             newGame.update(delta);
         }
+
         for (Star star : stars) {
             star.update(delta);
         }
@@ -252,6 +253,11 @@ public class GameScreen extends BaseScreen {
     public boolean touchDragged(Vector2 touch, int pointer) {
         playerShip.touchDragged(touch, pointer);
         return false;
+    }
+
+    @Override
+    public boolean mouseMoved(Vector2 touch) {
+        return touchDragged(touch, 1);
     }
 
     @Override

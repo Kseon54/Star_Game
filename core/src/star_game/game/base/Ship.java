@@ -2,6 +2,7 @@ package star_game.game.base;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import star_game.game.math.Rect;
@@ -48,13 +49,18 @@ public class Ship extends Sprite {
     public void update(float delta) {
         pos.mulAdd(v, delta);
         reloadTimer += delta;
-        if (reloadTimer >= reloadInterval) {
+        if (reloadTimer >= reloadInterval && !isDestroyed()) {
             reloadTimer = 0;
+            calculateBulletPos();
             shoot();
         }
 
         damageAnimateTimer += delta;
         if (damageAnimateTimer >= DAMAGE_ANIMATE_TIMER) frame = 0;
+    }
+
+    public void calculateBulletPos() {
+        bulletPos.set(pos.x, getBottom()).rotateAroundDeg(pos,angle);
     }
 
     public void damage(int damage) {
@@ -84,6 +90,10 @@ public class Ship extends Sprite {
         explosion.set(pos, getHeight());
     }
 
+    public void stop() {
+        v.setZero();
+    }
+
     public int getDamage() {
         return damage;
     }
@@ -96,7 +106,49 @@ public class Ship extends Sprite {
         this.bulletPos.set(bulletPos);
     }
 
+    public void setBulletPos(float x, float y) {
+        this.bulletPos.set(x, y);
+    }
+
     public Vector2 getV() {
         return v;
+    }
+
+    public void setV(Vector2 v) {
+        this.v.set(v);
+    }
+
+    public void setV(float x, float y) {
+        v.x = x;
+        v.y = y;
+    }
+
+    public Vector2 getBulletV() {
+        return bulletV;
+    }
+
+    public void setBulletV(Vector2 bulletV) {
+        this.bulletV.set(bulletV);
+    }
+
+    public Vector2 getV0() {
+        return v0;
+    }
+
+    public void setV0(Vector2 v0) {
+        this.v0.set(v0);
+    }
+
+    public void setV0(float x, float y) {
+        v0.x = x;
+        v0.y = y;
+    }
+
+    public float getReloadInterval() {
+        return reloadInterval;
+    }
+
+    public void setReloadInterval(float reloadInterval) {
+        this.reloadInterval = reloadInterval;
     }
 }

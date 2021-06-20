@@ -13,6 +13,10 @@ public class EnemyShip extends Ship {
 
     private static final float PADDING = 0.03f;
 
+    private static final float MIN_SPEED = 0.3f;
+
+    private float angeleStart = 0;
+
     public EnemyShip(Rect worldBounds, ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound) {
         this.worldBounds = worldBounds;
         this.bulletPool = bulletPool;
@@ -22,18 +26,21 @@ public class EnemyShip extends Ship {
         v = new Vector2();
         this.bulletV = new Vector2();
         this.bulletPos = new Vector2();
+        angle = 0;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        bulletPos.set(pos.x, pos.y - getHalfHeight());
-
-        if (getTop() + PADDING < worldBounds.getTop()) {
-            v.set(v0);
+        if (getTop() + PADDING < worldBounds.getTop() || angle != 0 && v.len() >= MIN_SPEED) {
+            if (isRotation()) {
+                stop();
+                reloadTimer = reloadInterval * 0.8f;
+            } else v.set(v0);
         } else {
             reloadTimer = reloadInterval * 0.8f;
         }
+
 
         if (getRight() > worldBounds.getRight() || getLeft() < worldBounds.getLeft()) {
             v0.x *= -1;
@@ -43,6 +50,16 @@ public class EnemyShip extends Ship {
         if (worldBounds.isOutside(this)) {
             destroy();
         }
+    }
+
+    private boolean isRotation() {
+        angle = angle % 360 < 0 ? angle + 360 : angle;
+        if (angle == angeleStart) return false;
+        if (angeleStart - 180 > 180) angle++;
+        else angle--;
+        if (Math.abs(angle - angeleStart) < 2)
+            angle = angeleStart;
+        return angle != angeleStart;
     }
 
     public void set(
@@ -75,5 +92,24 @@ public class EnemyShip extends Ship {
                         || bullet.getBottom() > getTop()
                         || bullet.getTop() < pos.y
         );
+    }
+
+    public void setAngeleStart(float angeleStart) {
+        this.angeleStart = angeleStart;
+    }
+
+    @Override
+    public void setAngle(float angle) {
+        this.angle = angle;
+        angeleStart = angle;
+    }
+
+    public void clear() {
+        angle = 0;
+        v.setZero();
+        v0.setZero();
+        bulletV.setZero();
+        bulletPos.setZero();
+        angeleStart = 0;
     }
 }

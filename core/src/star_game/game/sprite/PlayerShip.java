@@ -59,12 +59,16 @@ public class PlayerShip extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
-        bulletPos.set(pos.x, pos.y + getHalfHeight());
 
         move(delta);
 
         if (getLeft() < worldBounds.getLeft()) setLeft(worldBounds.getLeft());
         if (getRight() > worldBounds.getRight()) setRight(worldBounds.getRight());
+    }
+
+    @Override
+    public void calculateBulletPos() {
+        bulletPos.set(pos.x, getTop()).rotateAroundDeg(pos,angle);
     }
 
     public boolean isBulletCollision(Rect bullet) {
@@ -109,9 +113,5 @@ public class PlayerShip extends Ship {
 
     private void moveLeft() {
         v.set(v0).rotateDeg(180);
-    }
-
-    private void stop() {
-        v.setZero();
     }
 }
