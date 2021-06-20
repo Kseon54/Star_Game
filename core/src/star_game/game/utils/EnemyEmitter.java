@@ -64,7 +64,7 @@ public class EnemyEmitter {
 
     private Enemy enemySize;
 
-    private int level = 2;
+    private int level = 1;
 
     public EnemyEmitter(Rect worldBounds, EnemyShipPool enemyPool, TextureAtlas atlas, PlayerShip playerShip) {
         this.worldBounds = worldBounds;
@@ -87,7 +87,7 @@ public class EnemyEmitter {
         if (playerShip.isDestroyed()) return;
 
         generateTimer += delta;
-        float generateInterval = GENERATE_INTERVAL - (level - 1) * 0.3f;
+        float generateInterval = GENERATE_INTERVAL + (level - 1) * 0.3f;
         generateInterval = Math.max(generateInterval, MIN_GENERATE_INTERVAL);
         if (generateTimer >= generateInterval) {
             generateTimer = 0f;
@@ -102,7 +102,7 @@ public class EnemyEmitter {
             if (enemySize == Enemy.ENEMY_BIG)
                 enemyShip.setV0((enemyShip.pos.x < 0 ? 1 : -1) * Rnd.nextFloat(0.025f, 0.055f), 0);
 
-            if (level > 1) {
+            if (level >= 2) {
                 if (enemySize.equals(Enemy.ENEMY_SMALL)) {
                     tmp.set(playerShip.pos).sub(enemyShip.pos);
 
@@ -115,12 +115,19 @@ public class EnemyEmitter {
                 }
                 enemyShip.setReloadInterval(Math.max(MIN_RELOAD_INTERVAL, enemyShip.getReloadInterval() - level * 0.08f));
             }
+            if (level >= 5) {
+                if (enemySize.equals(Enemy.ENEMY_BIG)) {
+                    enemyShip.getBulletV().setLength(0.4f);
+                    enemyShip.setPurpose(playerShip.pos);
+                    enemyShip.setDamage(enemyShip.getDamage() / 2);
+                }
+            }
         }
     }
 
     private EnemyShip generationLevel1() {
         float type = (float) Math.random();
-//        float type = 0.3f;
+//        float type = 0.9f;
         if (type < IS_ENEMY_SMALL) {
             enemySize = Enemy.ENEMY_SMALL;
             return getEnemySmall();

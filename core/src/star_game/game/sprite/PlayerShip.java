@@ -18,7 +18,6 @@ public class PlayerShip extends Ship {
     private static final float RELOAD_INTERVAL = 0.2f;
     private static final int HP = 100;
 
-    private final Vector2 tmp;
     private final Vector2 nextPos;
 
     public PlayerShip(TextureAtlas atlas, ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound) {
@@ -33,10 +32,9 @@ public class PlayerShip extends Ship {
         v0.set(SPEED, 0);
         reloadInterval = RELOAD_INTERVAL;
         bulletHeight = 0.01f;
-        damage = 1;
+        damage = 0;
         hp = HP;
 
-        tmp = new Vector2();
         nextPos = new Vector2();
     }
 
@@ -67,7 +65,7 @@ public class PlayerShip extends Ship {
     }
 
     @Override
-    public void calculateBulletPos() {
+    public void calculateBullet() {
         bulletPos.set(pos.x, getTop()).rotateAroundDeg(pos,angle);
     }
 

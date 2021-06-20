@@ -100,4 +100,8 @@ public class Sprite extends Rect {
     public void flushDestroy() {
         destroyed = false;
     }
+
+    public TextureRegion[] getRegions() {
+        return regions;
+    }
 }
