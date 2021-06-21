@@ -15,6 +15,8 @@ public class Ship extends Sprite {
     public static final float DAMAGE_ANIMATE_TIMER = 0.1f;
     protected Vector2 v0;
     protected Vector2 v;
+    protected final Vector2 tmp;
+    private Vector2 purpose;
 
     protected Rect worldBounds;
     protected BulletPool bulletPool;
@@ -34,6 +36,7 @@ public class Ship extends Sprite {
     protected float damageAnimateTimer = DAMAGE_ANIMATE_TIMER;
 
     public Ship() {
+        tmp = new Vector2();
     }
 
     public Ship(TextureRegion region, int rows, int cols, int frames) {
@@ -42,19 +45,29 @@ public class Ship extends Sprite {
         v0 = new Vector2();
         bulletV = new Vector2();
         bulletPos = new Vector2();
+        tmp = new Vector2();
     }
 
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
         reloadTimer += delta;
-        if (reloadTimer >= reloadInterval) {
+        if (reloadTimer >= reloadInterval && !isDestroyed()) {
             reloadTimer = 0;
+            calculateBullet();
             shoot();
         }
 
         damageAnimateTimer += delta;
         if (damageAnimateTimer >= DAMAGE_ANIMATE_TIMER) frame = 0;
+    }
+
+    public void calculateBullet() {
+        bulletPos.set(pos.x, getBottom()).rotateAroundDeg(pos, angle);
+        if (purpose != null) {
+            float angele = tmp.set(purpose).sub(bulletPos).angleDeg();
+            bulletV.setAngleDeg(angele);
+        }
     }
 
     public void damage(int damage) {
@@ -67,7 +80,7 @@ public class Ship extends Sprite {
         damageAnimateTimer = 0;
     }
 
-    private void shoot() {
+    protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, damage, bulletHeight);
         bulletSound.play();
@@ -84,6 +97,10 @@ public class Ship extends Sprite {
         explosion.set(pos, getHeight());
     }
 
+    public void stop() {
+        v.setZero();
+    }
+
     public int getDamage() {
         return damage;
     }
@@ -96,7 +113,61 @@ public class Ship extends Sprite {
         this.bulletPos.set(bulletPos);
     }
 
+    public void setBulletPos(float x, float y) {
+        this.bulletPos.set(x, y);
+    }
+
     public Vector2 getV() {
         return v;
+    }
+
+    public void setV(Vector2 v) {
+        this.v.set(v);
+    }
+
+    public void setV(float x, float y) {
+        v.x = x;
+        v.y = y;
+    }
+
+    public Vector2 getBulletV() {
+        return bulletV;
+    }
+
+    public void setBulletV(Vector2 bulletV) {
+        this.bulletV.set(bulletV);
+    }
+
+    public Vector2 getV0() {
+        return v0;
+    }
+
+    public void setV0(Vector2 v0) {
+        this.v0.set(v0);
+    }
+
+    public void setV0(float x, float y) {
+        v0.x = x;
+        v0.y = y;
+    }
+
+    public float getReloadInterval() {
+        return reloadInterval;
+    }
+
+    public void setReloadInterval(float reloadInterval) {
+        this.reloadInterval = reloadInterval;
+    }
+
+    public Vector2 getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(Vector2 purpose) {
+        this.purpose = purpose;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

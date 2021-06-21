@@ -12,13 +12,12 @@ import star_game.game.pool.ExplosionPool;
 
 public class PlayerShip extends Ship {
 
-    public static final float SPEED = 0.02f;
+    public static final float SPEED = 0.5f;
     private static final float HEIGHT = 0.15f;
     private static final float PADDING = 0.03f;
     private static final float RELOAD_INTERVAL = 0.2f;
     private static final int HP = 100;
 
-    private final Vector2 tmp;
     private final Vector2 nextPos;
 
     public PlayerShip(TextureAtlas atlas, ExplosionPool explosionPool, BulletPool bulletPool, Sound bulletSound) {
@@ -30,21 +29,19 @@ public class PlayerShip extends Ship {
 
         this.explosionPool = explosionPool;
 
-        v0.set(0.5f, 0);
-        v.set(SPEED, 0);
+        v0.set(SPEED, 0);
         reloadInterval = RELOAD_INTERVAL;
         bulletHeight = 0.01f;
         damage = 1;
         hp = HP;
 
-        tmp = new Vector2();
         nextPos = new Vector2();
     }
 
     public void newGame() {
         this.hp = HP;
         this.pos.x = worldBounds.pos.x;
-        v.setZero();
+        stop();
         flushDestroy();
     }
 
@@ -54,37 +51,65 @@ public class PlayerShip extends Ship {
         this.worldBounds = worldBounds;
         setHeightProportion(HEIGHT);
         setBottom(worldBounds.getBottom() + PADDING);
+        nextPos.set(pos);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        bulletPos.set(pos.x, pos.y + getHalfHeight());
-        tmp.set(nextPos.x, 0);
-        if (tmp.sub(pos.x, 0).len() <= v.len()) {
-            pos.set(nextPos.x, pos.y);
-            v.setZero();
-        } else pos.add(v);
+
+        move(delta);
+
         if (getLeft() < worldBounds.getLeft()) setLeft(worldBounds.getLeft());
         if (getRight() > worldBounds.getRight()) setRight(worldBounds.getRight());
     }
 
     @Override
+    public void calculateBullet() {
+        bulletPos.set(pos.x, getTop()).rotateAroundDeg(pos,angle);
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(
+                bullet.getRight() < getLeft()
+                        || bullet.getLeft() > getRight()
+                        || bullet.getBottom() > pos.y
+                        || bullet.getTop() < getBottom()
+        );
+    }
+
+    @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
-        nextPos.set(touch.x, 0);
-        tmp.set(nextPos);
-        this.v.set(tmp.sub(pos).setLength(SPEED).x, 0);
+        nextPos.x = touch.x;
+        if (pos.x < touch.x) moveRight();
+        if (pos.x > touch.x) moveLeft();
         return false;
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        return touchDragged(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        v.setZero();
+        stop();
         return false;
     }
 
-    @Override
-    public Vector2 getV() {
-        return v;
+    private void move(float delta) {
+        tmp.set(nextPos);
+        if ((tmp.sub(pos).len() <= 0.01f)) {
+            stop();
+            pos.set(nextPos);
+        }
+    }
+
+    private void moveRight() {
+        v.set(v0);
+    }
+
+    private void moveLeft() {
+        v.set(v0).rotateDeg(180);
     }
 }

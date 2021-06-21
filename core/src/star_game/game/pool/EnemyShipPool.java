@@ -2,6 +2,8 @@ package star_game.game.pool;
 
 import com.badlogic.gdx.audio.Sound;
 
+import java.util.List;
+
 import star_game.game.base.SpritesPool;
 import star_game.game.math.Rect;
 import star_game.game.sprite.EnemyShip;
@@ -23,5 +25,12 @@ public class EnemyShipPool extends SpritesPool<EnemyShip> {
     @Override
     protected EnemyShip newObject() {
         return new EnemyShip(worldBounds,explosionPool, bulletPool, bulletSound);
+    }
+
+    public void exitShips(){
+        if (activeObjects.isEmpty()) return;
+        for (EnemyShip enemyShip: activeObjects) {
+            enemyShip.setV(enemyShip.getV().setLength(0.05f));
+        }
     }
 }

@@ -78,7 +78,7 @@ public class GameScreen extends BaseScreen {
     public void show() {
         super.show();
 
-        bg = new Texture("backgrounds/background.jpg");
+        bg = new Texture("backgrounds/bg.png");
         background = new Background(bg);
 
         mainAtlas = new TextureAtlas("textures/mainAtlas.tpack");
@@ -130,7 +130,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void update(float delta) {
-        if (state == State.PLAYING) {
+        if (state.equals(State.PLAYING)) {
             playerShip.update(delta);
             bulletPool.updateActiveSprites(delta);
             enemyShipPool.updateActiveSprites(delta);
@@ -138,6 +138,7 @@ public class GameScreen extends BaseScreen {
         } else {
             newGame.update(delta);
         }
+
         for (Star star : stars) {
             star.update(delta);
         }
@@ -210,18 +211,19 @@ public class GameScreen extends BaseScreen {
     }
 
     private void activeIsConflict() {
-        List<EnemyShip> listEnemy = enemyShipPool.getActiveObjects();
+        List<EnemyShip> enemyList = enemyShipPool.getActiveObjects();
         List<Bullet> bulletList = bulletPool.getActiveObjects();
 
-        for (EnemyShip enemyShip : listEnemy) {
-            if (!enemyShip.isOutside(playerShip)) {
+        for (EnemyShip enemyShip : enemyList) {
+            float minDist = enemyShip.getHalfWidth() + playerShip.getHalfWidth();
+            if (enemyShip.pos.dst(playerShip.pos) < minDist) {
                 playerShip.damage(enemyShip.getHp() / 2);
                 enemyShip.destroy();
                 frags++;
                 continue;
             }
             for (Bullet bullet : bulletList) {
-                if (!enemyShip.isOutside(bullet) &&
+                if (enemyShip.isBulletCollision(bullet) &&
                         bullet.getOwner().equals(playerShip)) {
                     enemyShip.damage(playerShip.getDamage());
                     bullet.destroy();
@@ -229,7 +231,8 @@ public class GameScreen extends BaseScreen {
                         frags++;
                     }
                 }
-                if (!playerShip.isOutside(bullet)) {
+                if (playerShip.isBulletCollision(bullet)
+                        && !bullet.getOwner().equals(playerShip)) {
                     playerShip.damage(bullet.getDamage());
                     bullet.destroy();
                 }
@@ -253,8 +256,14 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    public boolean mouseMoved(Vector2 touch) {
+        return touchDragged(touch, 1);
+    }
+
+    @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         newGame.touchDown(touch, pointer, button);
+        playerShip.touchDown(touch, pointer, button);
         return false;
     }
 }
