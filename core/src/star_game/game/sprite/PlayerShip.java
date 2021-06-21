@@ -32,7 +32,7 @@ public class PlayerShip extends Ship {
         v0.set(SPEED, 0);
         reloadInterval = RELOAD_INTERVAL;
         bulletHeight = 0.01f;
-        damage = 0;
+        damage = 1;
         hp = HP;
 
         nextPos = new Vector2();

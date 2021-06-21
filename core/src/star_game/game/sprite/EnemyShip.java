@@ -41,7 +41,6 @@ public class EnemyShip extends Ship {
             reloadTimer = reloadInterval * 0.8f;
         }
 
-
         if (getRight() > worldBounds.getRight() || getLeft() < worldBounds.getLeft()) {
             v0.x *= -1;
             v.x *= -1;
@@ -110,6 +109,7 @@ public class EnemyShip extends Ship {
         v0.setZero();
         bulletV.setZero();
         bulletPos.setZero();
-        angeleStart = 0;
+        setPurpose(null);
+        angeleStart = angle;
     }
 }

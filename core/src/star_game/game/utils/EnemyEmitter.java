@@ -87,7 +87,7 @@ public class EnemyEmitter {
         if (playerShip.isDestroyed()) return;
 
         generateTimer += delta;
-        float generateInterval = GENERATE_INTERVAL + (level - 1) * 0.3f;
+        float generateInterval = GENERATE_INTERVAL - (level - 1) * 0.3f;
         generateInterval = Math.max(generateInterval, MIN_GENERATE_INTERVAL);
         if (generateTimer >= generateInterval) {
             generateTimer = 0f;
@@ -95,6 +95,7 @@ public class EnemyEmitter {
 
             EnemyShip enemyShip = generationLevel1();
 
+            assert enemyShip != null;
             float enemyHalfWidth = enemyShip.getHalfWidth();
             enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyHalfWidth, worldBounds.getRight() - enemyHalfWidth);
             enemyShip.setBottom(worldBounds.getTop());
@@ -115,6 +116,13 @@ public class EnemyEmitter {
                 }
                 enemyShip.setReloadInterval(Math.max(MIN_RELOAD_INTERVAL, enemyShip.getReloadInterval() - level * 0.08f));
             }
+
+            if (level >= 4) {
+                if (enemySize.equals(Enemy.ENEMY_MEDIUM)) {
+                    enemyShip.setPurpose(playerShip.pos);
+                }
+            }
+
             if (level >= 5) {
                 if (enemySize.equals(Enemy.ENEMY_BIG)) {
                     enemyShip.getBulletV().setLength(0.4f);
@@ -127,20 +135,20 @@ public class EnemyEmitter {
 
     private EnemyShip generationLevel1() {
         float type = (float) Math.random();
-//        float type = 0.9f;
-        if (type < IS_ENEMY_SMALL) {
+//        float type = IS_ENEMY_BIG;
+        if (type <= IS_ENEMY_SMALL) {
             enemySize = Enemy.ENEMY_SMALL;
             return getEnemySmall();
         }
-        if (type < IS_ENEMY_MEDIUM) {
+        if (type <= IS_ENEMY_MEDIUM) {
             enemySize = Enemy.ENEMY_MEDIUM;
             return getEnemyMedium();
         }
-        if (type < IS_ENEMY_BIG) {
+        if (type <= IS_ENEMY_BIG) {
             enemySize = Enemy.ENEMY_BIG;
             return getEnemyBig();
         }
-        return getEnemyBig();
+        return null;
     }
 
     public EnemyShip getEnemyBig() {

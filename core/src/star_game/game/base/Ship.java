@@ -16,6 +16,7 @@ public class Ship extends Sprite {
     protected Vector2 v0;
     protected Vector2 v;
     protected final Vector2 tmp;
+    private Vector2 purpose;
 
     protected Rect worldBounds;
     protected BulletPool bulletPool;
@@ -26,8 +27,6 @@ public class Ship extends Sprite {
     protected float bulletHeight;
     protected int damage;
     protected int hp;
-
-    private Vector2 purpose;
 
     protected ExplosionPool explosionPool;
 
@@ -81,7 +80,7 @@ public class Ship extends Sprite {
         damageAnimateTimer = 0;
     }
 
-    private void shoot() {
+    protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, damage, bulletHeight);
         bulletSound.play();
